@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Is it Femboy Friday?</title>
+  <link rel="icon" href="https://i.pinimg.com/474x/0a/33/61/0a3361399789ef8d39fad1628ac4908e.jpg" />
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1f1b2d 0%, #12101a 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: #c8c1e0;
+      text-align: center;
+      padding: 20px;
+      opacity: 0;
+      animation: fadeIn 1.2s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #b8aee6;
+      text-shadow: 0 0 10px #8e84c7aa;
+    }
+
+    #message {
+      background: #272339;
+      border-radius: 15px;
+      padding: 30px 50px;
+      max-width: 400px;
+      font-size: 1.7rem;
+      font-weight: 500;
+      box-shadow: 0 8px 30px rgb(89 64 153 / 0.5);
+      color: #c2baf2;
+      user-select: none;
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    #countdown {
+      font-size: 1.1rem;
+      margin-top: -15px;
+      margin-bottom: 25px;
+      color: #a29bdb;
+    }
+
+    #profile-pic {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(149, 132, 224, 0.3);
+      z-index: 1000;
+    }
+
+    #profile-pic:hover {
+      transform: scale(1.1);
+    }
+
+    .rainbow-glow {
+      animation: rainbowGlow 6s linear infinite, spinSlow 20s linear infinite;
+    }
+
+    @keyframes rainbowGlow {
+      0% { box-shadow: 0 0 12px #e40303; }
+      16% { box-shadow: 0 0 12px #ff8c00; }
+      33% { box-shadow: 0 0 12px #ffed00; }
+      50% { box-shadow: 0 0 12px #008026; }
+      66% { box-shadow: 0 0 12px #004dff; }
+      83% { box-shadow: 0 0 12px #750787; }
+      100% { box-shadow: 0 0 12px #e40303; }
+    }
+
+    @keyframes spinSlow {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes buttonPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 6px 20px rgb(107 93 209 / 0.6);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 9px 28px rgb(149 132 224 / 0.8);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Is it Femboy Friday?</h1>
+  <div id="message">Checking...</div>
+  <div id="countdown"></div>
+
+  <img
+    id="profile-pic"
+    src="https://cdn.discordapp.com/avatars/1142433636822548601/a_5cd36a09655eca04cff2bd44379954ce.gif?size=1024"
+    alt="Profile"
+  />
+
+  <!-- 🎊 Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    function isFemboyFriday() {
+      const today = new Date();
+      return today.getDay() === 5;
+    }
+
+    function getTimeUntilNextFriday() {
+      const now = new Date();
+      const day = now.getDay();
+      const daysUntilFriday = (5 - day + 7) % 7 || 7;
+      const nextFriday = new Date(now);
+      nextFriday.setDate(now.getDate() + daysUntilFriday);
+      nextFriday.setHours(0, 0, 0, 0);
+      return nextFriday - now;
+    }
+
+    function formatTime(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const days = Math.floor(totalSeconds / (3600 * 24));
+      const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    const messageEl = document.getElementById('message');
+    const countdownEl = document.getElementById('countdown');
+    const profilePic = document.getElementById('profile-pic');
+
+    profilePic.addEventListener('click', () => {
+      window.location.href = 'https://riley.cat';
+    });
+
+    if (isFemboyFriday()) {
+      messageEl.textContent = "Yes! It's Femboy Friday 🎉";
+      profilePic.classList.add('rainbow-glow');
+
+      const prideColors = ['#e40303', '#ff8c00', '#ffed00', '#008026', '#004dff', '#750787'];
+
+      function fireSideConfetti() {
+        // Top
+        confetti({
+          particleCount: 250,
+          angle: 90,
+          spread: 70,
+          origin: { x: 0.5, y: 0 },
+          colors: prideColors,
+        });
+
+        // Bottom
+        confetti({
+          particleCount: 250,
+          angle: 270,
+          spread: 70,
+          origin: { x: 0.5, y: 1 },
+          colors: prideColors,
+        });
+
+        // Left
+        confetti({
+          particleCount: 250,
+          angle: 0,
+          spread: 70,
+          origin: { x: 0, y: 0.5 },
+          colors: prideColors,
+        });
+
+        // Right
+        confetti({
+          particleCount: 250,
+          angle: 180,
+          spread: 70,
+          origin: { x: 1, y: 0.5 },
+          colors: prideColors,
+        });
+      }
+
+      fireSideConfetti();
+      const interval = setInterval(fireSideConfetti, 3000);
+      setTimeout(() => clearInterval(interval), 15000);
+    } else {
+      messageEl.textContent = "Nope, it's not Femboy Friday yet.";
+
+      function updateCountdown() {
+        const ms = getTimeUntilNextFriday();
+        countdownEl.textContent = `Time until next Femboy Friday: ${formatTime(ms)}`;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+  </script>
+</body>
+</html>
