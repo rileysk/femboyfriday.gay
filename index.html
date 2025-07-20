@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta name="description" content=""> 
+  <meta property="og:title" content="riley!"> 
+  <meta property="og:image" content="pfp.gif">
+  <meta property="og:description" content="home of riley, riley and even more riley!">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Is it Femboy Friday?</title>
@@ -94,28 +98,6 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
-    @keyframes fadeSlideUp {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @keyframes buttonPulse {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 6px 20px rgb(107 93 209 / 0.6);
-      }
-      50% {
-        transform: scale(1.05);
-        box-shadow: 0 9px 28px rgb(149 132 224 / 0.8);
-      }
-    }
   </style>
 </head>
 <body>
@@ -125,26 +107,37 @@
 
   <img
     id="profile-pic"
-    src="https://riley.cat/pfp.gif"
+    src="https://riley.cat/assets/pfp.gif"
     alt="Profile"
   />
 
-  <!-- 🎊 Confetti Library -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
+    const messageEl = document.getElementById('message');
+    const countdownEl = document.getElementById('countdown');
+    const profilePic = document.getElementById('profile-pic');
+
     function isFemboyFriday() {
-      const today = new Date();
-      return today.getDay() === 5;
+      const now = new Date();
+      return now.getDay() === 5; // Friday (0 = Sunday, 5 = Friday)
     }
 
     function getTimeUntilNextFriday() {
       const now = new Date();
-      const day = now.getDay();
-      const daysUntilFriday = (5 - day + 7) % 7 || 7;
+      const day = now.getDay(); // 0 = Sunday
+
+      let daysUntilFriday = (5 - day + 7) % 7;
+
+      // If it's already Friday, next Friday is 7 days from now
+      if (day === 5) {
+        daysUntilFriday = 7;
+      }
+
       const nextFriday = new Date(now);
       nextFriday.setDate(now.getDate() + daysUntilFriday);
-      nextFriday.setHours(0, 0, 0, 0);
+      nextFriday.setHours(0, 0, 0, 0); // Set to next Friday at 00:00
+
       return nextFriday - now;
     }
 
@@ -157,71 +150,49 @@
       return `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
-    const messageEl = document.getElementById('message');
-    const countdownEl = document.getElementById('countdown');
-    const profilePic = document.getElementById('profile-pic');
+    function showFemboyFridayMessage() {
+      messageEl.textContent = "Yes! It's Femboy Friday 🎉";
+      countdownEl.textContent = "";
+      profilePic.classList.add('rainbow-glow');
+
+      const prideColors = ['#e40303', '#ff8c00', '#ffed00', '#008026', '#004dff', '#750787'];
+
+      function fireSideConfetti() {
+        confetti({ particleCount: 250, angle: 90, spread: 70, origin: { x: 0.5, y: 0 }, colors: prideColors });
+        confetti({ particleCount: 250, angle: 270, spread: 70, origin: { x: 0.5, y: 1 }, colors: prideColors });
+        confetti({ particleCount: 250, angle: 0, spread: 70, origin: { x: 0, y: 0.5 }, colors: prideColors });
+        confetti({ particleCount: 250, angle: 180, spread: 70, origin: { x: 1, y: 0.5 }, colors: prideColors });
+      }
+
+      fireSideConfetti();
+      const interval = setInterval(fireSideConfetti, 3000);
+      setTimeout(() => clearInterval(interval), 15000);
+    }
+
+    function startCountdown() {
+      function updateCountdown() {
+        const ms = getTimeUntilNextFriday();
+        if (ms <= 0) {
+          showFemboyFridayMessage();
+          clearInterval(timer);
+        } else {
+          countdownEl.textContent = `Time until next Femboy Friday: ${formatTime(ms)}`;
+        }
+      }
+
+      updateCountdown();
+      const timer = setInterval(updateCountdown, 1000);
+    }
 
     profilePic.addEventListener('click', () => {
       window.location.href = 'https://riley.cat';
     });
 
     if (isFemboyFriday()) {
-      messageEl.textContent = "Yes! It's Femboy Friday 🎉";
-      profilePic.classList.add('rainbow-glow');
-
-      const prideColors = ['#e40303', '#ff8c00', '#ffed00', '#008026', '#004dff', '#750787'];
-
-      function fireSideConfetti() {
-        // Top
-        confetti({
-          particleCount: 250,
-          angle: 90,
-          spread: 70,
-          origin: { x: 0.5, y: 0 },
-          colors: prideColors,
-        });
-
-        // Bottom
-        confetti({
-          particleCount: 250,
-          angle: 270,
-          spread: 70,
-          origin: { x: 0.5, y: 1 },
-          colors: prideColors,
-        });
-
-        // Left
-        confetti({
-          particleCount: 250,
-          angle: 0,
-          spread: 70,
-          origin: { x: 0, y: 0.5 },
-          colors: prideColors,
-        });
-
-        // Right
-        confetti({
-          particleCount: 250,
-          angle: 180,
-          spread: 70,
-          origin: { x: 1, y: 0.5 },
-          colors: prideColors,
-        });
-      }
-
-      fireSideConfetti();
-      const interval = setInterval(fireSideConfetti, 3000);
-      setTimeout(() => clearInterval(interval), 15000);
+      showFemboyFridayMessage();
     } else {
       messageEl.textContent = "Nope, it's not Femboy Friday yet.";
-
-      function updateCountdown() {
-        const ms = getTimeUntilNextFriday();
-        countdownEl.textContent = `Time until next Femboy Friday: ${formatTime(ms)}`;
-      }
-
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
+      startCountdown();
     }
   </script>
 </body>
